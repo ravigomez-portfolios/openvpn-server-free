@@ -140,7 +140,7 @@ resource "aws_instance" "openvpn-free" {
   }
   user_data = <<-EOF
               #!/bin/bash
-              echo hello|
+              sudo apt-get update && sudo apt-get upgrade -y
               EOF
   tags = {
     Name = "openvpn-free"
