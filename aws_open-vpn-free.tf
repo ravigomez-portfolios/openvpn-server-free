@@ -42,8 +42,8 @@ resource "aws_route_table" "openvpn-rt" {
 }
 
 resource "aws_subnet" "openvpn-sn" {
-  vpc_id     = aws_vpc.openvpn-vpc.id
-  cidr_block = "10.0.1.0/24"
+  vpc_id            = aws_vpc.openvpn-vpc.id
+  cidr_block        = "10.0.1.0/24"
   availability_zone = "sa-east-1a"
   tags = {
     Name = "openvpn-free"
@@ -124,16 +124,16 @@ resource "aws_eip" "openvpn-eip" {
   vpc                       = true
   network_interface         = aws_network_interface.openvpn-ni.id
   associate_with_private_ip = "10.0.1.50"
-  depends_on                = [aws_security_group.openvpn-sg]
+  depends_on                = [aws_security_group.openvpn-sg, aws_instance.openvpn-free]
   tags = {
     Name = "openvpn-free"
   }
 }
 
 resource "aws_instance" "openvpn-free" {
-  ami           = "ami-04bde880fb57a5227"
-  instance_type = "t2.nano"
-  key_name      = "openvpn-brazil"
+  ami               = "ami-04bde880fb57a5227"
+  instance_type     = "t2.nano"
+  key_name          = "openvpn-brazil"
   availability_zone = "sa-east-1a"
   network_interface {
     device_index         = 0
@@ -149,7 +149,7 @@ resource "aws_instance" "openvpn-free" {
 }
 
 output "server_public_ip" {
-  value = aws_eip.openvpn-eip.public_ip
+  value       = aws_eip.openvpn-eip.public_ip
   description = "Server Public IP ADDRESS."
   sensitive   = false
 }
