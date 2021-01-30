@@ -13,7 +13,7 @@ provider "aws" {
 }
 
 resource "aws_vpc" "openvpn-vpc" {
-  cidr_block = "10.0.0.0/16"
+  cidr_block = var.network.cidr_block
   tags = {
     Name = "openvpn-free"
   }
@@ -44,6 +44,7 @@ resource "aws_route_table" "openvpn-rt" {
 resource "aws_subnet" "openvpn-sn" {
   vpc_id     = aws_vpc.openvpn-vpc.id
   cidr_block = "10.0.1.0/24"
+  availability_zone = "sa-east-1a"
   tags = {
     Name = "openvpn-free"
   }
@@ -145,4 +146,10 @@ resource "aws_instance" "openvpn-free" {
   tags = {
     Name = "openvpn-free"
   }
+}
+
+output "server_public_ip" {
+  value = aws_eip.openvpn-eip.public_ip
+  description = "Server Public IP ADDRESS."
+  sensitive   = false
 }
